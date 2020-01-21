@@ -11,6 +11,9 @@ cp .env.example .env
 
 chmod +x build.sh
 
+cd ihm2
+
+sudo ionic build --prod
 
 ./build.sh
 

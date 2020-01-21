@@ -1,0 +1,72 @@
+<!--
+  Generated template for the CurrentPage page.
+  
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-toolbar>
+    
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    
+    <ion-title >
+      <div class="flex-align-item">
+          <img src="assets/imgs/tekin_logo.png" alt="">
+          <div class="margin-left-3"> Demo </div>
+      </div>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon name="refresh"></ion-icon>
+      </button>
+    </ion-buttons>
+    
+  </ion-toolbar>
+  
+</ion-header>
+
+<ion-content padding>
+  <ion-grid no-padding item-content>
+    <ion-row>
+      <ion-col col-12 >
+        <ion-card>
+          <ion-card-header>
+            <div text-uppercase class="card-title">Temperature</div>
+          </ion-card-header>
+        </ion-card>
+      </ion-col>
+      <ion-col col-12 >
+        <ion-card>
+          <ion-card-header>
+            <div text-uppercase class="card-title"> Humidité</div>
+          </ion-card-header>
+        </ion-card>
+      </ion-col> 
+      <ion-col col-12 >
+        <ion-card>
+          <ion-card-header>
+            <div text-uppercase class="card-title"> Lock</div>
+          </ion-card-header>
+        </ion-card>
+      </ion-col> 
+    </ion-row>
+  </ion-grid>
+
+
+
+  
+  
+</ion-content>
+
+<ion-footer>
+  <div class="flex-justify-end">
+  </div>
+</ion-footer>
+
+
+
+
+
+

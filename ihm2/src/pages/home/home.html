@@ -1,0 +1,118 @@
+<!--
+  Generated template for the CurrentPage page.
+  
+  See http://ionicframework.com/docs/components/#navigation for more info on
+  Ionic pages and navigation.
+-->
+<ion-header>
+  <ion-navbar>
+    
+    <button ion-button menuToggle>
+      <ion-icon name="menu"></ion-icon>
+    </button>
+    
+    <ion-title >
+      <div class="flex-align-item">
+        <img src="assets/imgs/tekin_logo.png" alt="">
+        <div class="margin-left-3"> Demo </div>
+      </div>
+    </ion-title>
+    <ion-buttons end>
+      <button ion-button icon-only (click)="refresh()">
+        <ion-icon name="refresh" id='refresh'></ion-icon>
+      </button>
+    </ion-buttons>
+    
+  </ion-navbar>
+  
+</ion-header>
+
+<ion-content padding>
+  <ion-grid no-padding item-content>
+    <ion-row>
+      <ion-col col-3 >
+        <ion-card>
+          <ion-card-header>
+            <div text-uppercase class="card-title">Lock</div>
+          </ion-card-header>
+          <p>Etat </p>
+          <div class="flex-col">
+            <div *ngIf="switch"> <ion-icon name="radio-button-on" large id="onoff"></ion-icon></div>
+            <div *ngIf="!switch"> <ion-icon name="radio-button-off" large id="onoff"></ion-icon> </div>
+          </div>
+        </ion-card>
+        
+      </ion-col>
+      <ion-col col-9>
+        
+        <ion-grid no-padding item-content>
+          <ion-row>
+            <ion-col col-12 >
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title">Temperature</div>
+                </ion-card-header>
+                <ion-grid no-padding item-content>
+                  <ion-row>
+                    <ion-col col-2>
+                      <h2>Current Temperature </h2>
+                      <div class="flex-col">
+                        <div class="clock-text">{{currentTemp}}°</div>
+                      </div>
+                    </ion-col>
+                    <ion-col col-10>
+                      <div id="graphTemp"></div>
+                      
+                    </ion-col>
+                    
+                    
+                  </ion-row>
+                </ion-grid>   
+                
+              </ion-card>
+            </ion-col>
+            <ion-col col-12 >
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title"> Humidité</div>
+                </ion-card-header>
+                <ion-grid no-padding item-content>
+                  <ion-row>
+                    <ion-col col-2>
+                      <p>Humidité </p>
+                      <div class="flex-col">
+                        <div class="flex-align-item">
+                          <div class="clock-text">{{currentHum}}%</div>
+                        </div>
+                      </div>
+                    </ion-col>
+                    <ion-col col-10>
+                      <div id="graphHum"></div>
+                      
+                    </ion-col>
+                    
+                    
+                  </ion-row>
+                </ion-grid>   
+              </ion-card>
+            </ion-col> 
+            
+          </ion-row>
+        </ion-grid>
+        
+      </ion-col> 
+    </ion-row>
+  </ion-grid>
+  
+</ion-content>
+
+<ion-footer>
+  <div class="flex-justify-end">
+  </div>
+</ion-footer>
+
+
+
+
+
+

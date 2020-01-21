@@ -1,0 +1,186 @@
+// Ionic Variables and Theming. For more info, please see:
+// http://ionicframework.com/docs/theming/
+
+// Font path is used to include ionicons,
+// roboto, and noto sans fonts
+$font-path: "../assets/fonts";
+
+
+// The app direction is used to include
+// rtl styles in your app. For more info, please see:
+// http://ionicframework.com/docs/theming/rtl-support/
+$app-direction: ltr;
+
+
+@import "ionic.globals";
+
+
+// Shared Variables
+// --------------------------------------------------
+// To customize the look and feel of this app, you can override
+// the Sass variables found in Ionic's source scss files.
+// To view all the possible Ionic variables, see:
+// http://ionicframework.com/docs/theming/overriding-ionic-variables/
+
+
+
+
+// Named Color Variables
+// --------------------------------------------------
+// Named colors makes it easy to reuse colors on various components.
+// It's highly recommended to change the default colors
+// to match your app's branding. Ionic uses a Sass map of
+// colors so you can add, rename and remove colors as needed.
+// The "primary" color is the only required color in the map.
+
+$colors: (
+primary:    #488aff,
+secondary:  #32db64,
+danger:     #f53d3d,
+light:      #f4f4f4,
+dark:       #222,
+orange-tekin: #f6881905,
+header: #3e3f3a,
+bleu-header: #29ace0,
+);
+ion-card-header{
+  background-color:map-get($colors, bleu-header) ;
+}
+div.toolbar-background-md{
+  background-color: map-get($colors, header);
+  color:white;  
+}
+#onoff{
+  margin-top: 25px;
+  margin-bottom: 25px;
+  color:gray;
+font-size: 6em;
+}
+#refresh{
+  color:white;
+}
+div.toolbar-title-md{
+  color:white;
+}
+div.scroll-content{
+  background-color: map-get($colors, orange-tekin);
+  
+}
+// App iOS Variables
+// --------------------------------------------------
+// iOS only Sass variables can go here
+div .clock-text{
+  font-size: 4em;
+  color:gray;
+}
+.card-title{
+  color:white;
+  font-weight: bold;
+}
+.card-title-sub{
+  color:white;
+
+}
+
+.custom_item {
+  max-width: 400px;
+  min-width: 200px;
+}
+.flex-col {
+  display:flex;
+  flex-direction: column;
+  align-items: center;
+}
+.title{
+  font-size: 2.6em;
+  color:gray;
+}
+.flex{
+  display:flex;
+  width:100%;
+}
+.flex-align-item{
+  display:flex;
+  align-items: center;
+}
+.flex-justify-end{
+  display:flex;
+  justify-content:flex-end;
+}
+.flex-item{
+  display:flex;
+  justify-content: center;
+  flex-grow:1;
+}
+.left{
+  padding-left:10px
+}
+.right{
+  padding-right:10px
+}
+.relative{
+  position:relative;
+}
+.offsetY-m-20{
+  position:absolute;
+  bottom:5px;
+}
+.auto-margin{
+  margin-left: auto;
+  margin-right:auto;
+}
+#logo-jmg{
+  width:188px;
+}
+.full-right{
+  margin-left: auto;
+}
+.alert-md .alert-message{
+  overflow-y:auto
+}
+.margin-v-2{
+  margin-top:2%;
+  margin-bottom: 2%;
+}
+.margin-top-1{
+  margin-top:1%;
+}
+.margin-left-3{
+  padding-left:30px;
+}
+ion-label.label.label-md{
+  color:black;
+}
+
+.stat-title{
+  font-size: 1.6em;
+  color:#555555;
+}
+#mapid { height: 180px; }
+
+
+
+
+// App Theme
+// --------------------------------------------------
+// Ionic apps can have different themes applied, which can
+// then be future customized. This import comes last
+// so that the above variables are used and Ionic's
+// default are overridden.
+
+@import "ionic.theme.default";
+
+
+// Ionicons
+// --------------------------------------------------
+// The premium icon font for Ionic. For more info, please see:
+// http://ionicframework.com/docs/ionicons/
+
+@import "ionic.ionicons";
+
+
+// Fonts
+// --------------------------------------------------
+
+@import "roboto";
+@import "noto-sans";

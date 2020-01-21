@@ -1,0 +1,2 @@
+docker-compose exec api sh -c 'npm run build:app && npm run migration:generate -- -n name-of-this-migration && npm run build:migrations && npm run migration:run'
+# docker-compose exec api sh -c 'npm run migration:run'

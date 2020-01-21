@@ -1,0 +1,31 @@
+version: "2"
+services:
+  postgres:
+    image: postgres:11.5
+    ports:
+      - "${BDD_PORT}:5432"
+    environment:
+      POSTGRES_USER: ${BDD_USERNAME}
+      POSTGRES_PASSWORD: ${BDD_PASSWORD}
+      POSTGRES_DB: ${BDD_DB}
+    volumes:
+      - ${BDD_VOLUME_DIR}:/var/lib/postgresql/data
+    networks:
+      - webnet
+  api:
+    build: ./api
+    ports:
+      - "${API_PORT}:3001"
+    networks:
+      - webnet
+    depends_on:
+      - postgres
+    environment:
+      - LOCAL_ADRESS=${LOCAL_ADRESS}
+      - BDD_PORT=${BDD_PORT}
+      - BDD_USERNAME=${BDD_USERNAME}
+      - BDD_PASSWORD=${BDD_PASSWORD}
+      - BDD_BD=${BDD_DB}
+
+networks:
+  webnet:

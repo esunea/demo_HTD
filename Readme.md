@@ -1,8 +1,8 @@
 Prerequies : 
-    sudo apt-get install npm
-    sudo apt-get install docker
-    sudo apt-get install docker-compose
-    npm install -g ionic
+    -sudo apt-get install npm
+    -sudo apt-get install docker
+    -sudo apt-get install docker-compose
+    -npm install -g ionic
     
 
 cp .env.example .env

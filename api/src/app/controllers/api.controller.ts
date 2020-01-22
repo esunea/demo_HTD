@@ -27,7 +27,7 @@ export class ApiController {
     console.log()
 
     const datas = await getConnection().query(`
-    SELECT "data"."data" AS "data", "data"."date" AS "date" FROM data AS data WHERE data."deviceName" = $1 AND data.date BETWEEN $2 AND $3 ORDER BY "data"."date" DESC`
+    SELECT "data", "date" FROM data WHERE "deviceName" = $1 AND date BETWEEN $2 AND $3 ORDER BY "date" DESC`
     , [ device, debut, fin]
     );
     console.log(datas)
@@ -57,13 +57,20 @@ export class ApiController {
   async send(ctx){
     let payload = ctx.request.body.payload
     
-    payload.forEach(async element => {
+    let count = payload.length
+    for (let index = 0; index < payload.length; index++) {
+      const element = payload[index];
       let data = new Data()
       data.deviceName = element.name
       data.data = element.data
       data.date = new Date()
-      await getRepository(Data).save(data);
-    });
+      let result = await getRepository(Data).save(data);
+      console.log(result)
+      if(result){
+        count --
+      }
+    }
+    
     let resp = new HttpResponseOK()
     resp.setHeader('Access-Control-Allow-Origin', '*');
     return resp

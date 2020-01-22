@@ -1,5 +1,5 @@
 {
-  "name": "ionic-app-base",
+  "name": "ihm2",
   "integrations": {},
-  "type": "angular"
+  "type": "ionic-angular"
 }

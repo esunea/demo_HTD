@@ -23,7 +23,7 @@ export class HttpClientProvider {
   private token : string = ""
   private username : string = ""
   constructor(public http: HttpClient) {
-    this.baseURL = "http://box2.tekin.fr/demo/";
+    this.baseURL = "/demo/";
   }
   
   getData(device_name : string, graphTime:number):Promise<any>{

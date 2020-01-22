@@ -2,11 +2,11 @@ const { Config } = require('@foal/core');
 
 module.exports = {
   type: "postgres",
-  host: "box2.tekin.fr",
-  port: 4011,
-  username: "postgres",
-  database: "test",
-  password: "test",
+  host: process.env.LOCAL_ADRESS,
+  port: process.env.BDD_PORT,
+  username: process.env.BDD_USERNAME,
+  database: process.env.BDD_DB,
+  password: process.env.BDD_PASSWORD,
 
   dropSchema: Config.get('database.dropSchema', false),
   entities: ["build/app/**/*.entity.js"],

@@ -12,6 +12,7 @@ services:
       - ${BDD_VOLUME_DIR}:/var/lib/postgresql/data
     networks:
       - webnet
+    restart: always
   api:
     build: ./api
     ports:
@@ -26,6 +27,6 @@ services:
       - BDD_USERNAME=${BDD_USERNAME}
       - BDD_PASSWORD=${BDD_PASSWORD}
       - BDD_BD=${BDD_DB}
-
+    restart: always
 networks:
   webnet:

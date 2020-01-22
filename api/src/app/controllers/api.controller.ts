@@ -52,7 +52,7 @@ export class ApiController {
   @Post('/send')
   async send(ctx){
     let payload = ctx.request.body.payload
-    
+    console.log(payload)
     let count = payload.length
     for (let index = 0; index < payload.length; index++) {
       const element = payload[index];

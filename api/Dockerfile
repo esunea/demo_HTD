@@ -1,4 +1,4 @@
-FROM node:slim
+FROM node:lts-alpine3.11
 WORKDIR /home/node/app
 COPY package.json .
 RUN npm i

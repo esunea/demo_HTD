@@ -24,13 +24,11 @@ export class ApiController {
     let device = ctx.request.body.device_name
     let debut = new Date(new Date().getTime() - ctx.request.body.graphTime)
     let fin = new Date()
-    console.log()
 
     const datas = await getConnection().query(`
     SELECT "data", "date" FROM data WHERE "deviceName" = $1 AND date BETWEEN $2 AND $3 ORDER BY "date" DESC`
     , [ device, debut, fin]
     );
-    console.log(datas)
 
     let resp = new HttpResponseOK(datas)
     resp.setHeader('Access-Control-Allow-Origin', '*');
@@ -40,13 +38,11 @@ export class ApiController {
   async lastValue(ctx){
     let device = ctx.request.body.device_name
 
-    console.log()
 
     const datas = await getConnection().query(`
     SELECT "data"."data" AS "data" FROM data AS data WHERE data."deviceName" = $1 ORDER BY "data"."date" DESC LIMIT 1`
     , [ device]
     );
-    console.log(datas)
 
     let resp = new HttpResponseOK(datas)
     resp.setHeader('Access-Control-Allow-Origin', '*');
@@ -64,8 +60,8 @@ export class ApiController {
       data.deviceName = element.name
       data.data = element.data
       data.date = new Date()
+      console.log(data)
       let result = await getRepository(Data).save(data);
-      console.log(result)
       if(result){
         count --
       }

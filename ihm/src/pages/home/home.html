@@ -18,6 +18,9 @@
       </div>
     </ion-title>
     <ion-buttons end>
+      <button ion-button icon-only (click)="tooling()">
+        <ion-icon name="build" id="stfu"></ion-icon>
+      </button>
       <button ion-button icon-only (click)="refresh()">
         <ion-icon name="refresh" id='refresh'></ion-icon>
       </button>
@@ -33,77 +36,55 @@
       <ion-col col-3 >
         <ion-card>
           <ion-card-header>
-            <div text-uppercase class="card-title">Lock</div>
+            <div text-uppercase class="card-title">Jauge</div>
           </ion-card-header>
-          <p>Etat </p>
-          <div class="flex-col">
-            <div *ngIf="switch"> <ion-icon name="radio-button-on" large id="onoff"></ion-icon></div>
-            <div *ngIf="!switch"> <ion-icon name="radio-button-off" large id="onoff"></ion-icon> </div>
-          </div>
+          
+          <div id="gauge"></div>
+          
         </ion-card>
         
+      </ion-col> 
+      <ion-col col-3>
+        <ion-card>
+          <ion-card-header>
+            <div text-uppercase class="card-title">Bar</div>
+          </ion-card-header>
+        <div id="bar"></div>
+      </ion-card>
+
       </ion-col>
-      <ion-col col-9>
-        
-        <ion-grid no-padding item-content>
-          <ion-row>
-            <ion-col col-12 >
-              <ion-card>
-                <ion-card-header>
-                  <div text-uppercase class="card-title">Temperature</div>
-                </ion-card-header>
-                <ion-grid no-padding item-content>
-                  <ion-row>
-                    <ion-col col-2>
-                      <h2>Current Temperature </h2>
-                      <div class="flex-col">
-                        <div class="clock-text">{{currentTemp}}°</div>
-                      </div>
-                    </ion-col>
-                    <ion-col col-10>
-                      <div id="graphTemp"></div>
-                      
-                    </ion-col>
-                    
-                    
-                  </ion-row>
-                </ion-grid>   
-                
-              </ion-card>
-            </ion-col>
-            <ion-col col-12 >
-              <ion-card>
-                <ion-card-header>
-                  <div text-uppercase class="card-title"> Humidité</div>
-                </ion-card-header>
-                <ion-grid no-padding item-content>
-                  <ion-row>
-                    <ion-col col-2>
-                      <p>Humidité </p>
-                      <div class="flex-col">
-                        <div class="flex-align-item">
-                          <div class="clock-text">{{currentHum}}%</div>
-                        </div>
-                      </div>
-                    </ion-col>
-                    <ion-col col-10>
-                      <div id="graphHum"></div>
-                      
-                    </ion-col>
-                    
-                    
-                  </ion-row>
-                </ion-grid>   
-              </ion-card>
-            </ion-col> 
-            
-          </ion-row>
-        </ion-grid>
+      <ion-col col-6 >
+        <ion-card>
+          <ion-card-header>
+            <div text-uppercase class="card-title">Historique</div>
+          </ion-card-header>
+        <div class="flex-col">
+          <div id="Value" class="clock-text">{{humiditeValue}}%</div>
+        </div>
+        <div id="graphHum"></div>
+      </ion-card>
         
       </ion-col> 
+      
+      
     </ion-row>
   </ion-grid>
   
+  <div *ngIf="tool">
+    <p>a</p>
+    <input type="number" step=".01" [(ngModel)]="conf.dataScale.a">
+    <p>b</p>
+    <input type="number" [(ngModel)]="conf.dataScale.b">
+    <p>inv</p>
+    <input type="checkbox" [(ngModel)]="conf.dataScale.inv">
+    <p>refresh timer (ms)</p>
+    <input type="number" [(ngModel)]="conf.refresh">
+    <p>temps couvert par l'historique (ms)</p>
+    <input type="number" [(ngModel)]="conf.sampleSize">
+
+  </div>
+  
+
 </ion-content>
 
 <ion-footer>
@@ -116,3 +97,98 @@
 
 
 
+
+<!--
+  
+  <ion-content padding>
+    <ion-grid no-padding item-content>
+      <ion-row>
+        <ion-col col-3 >
+          <ion-card>
+            <ion-card-header>
+              <div text-uppercase class="card-title">Lock</div>
+            </ion-card-header>
+            <p>Etat </p>
+            <div class="flex-col">
+              <div *ngIf="switch"> <ion-icon name="radio-button-on" large id="onoff"></ion-icon></div>
+              <div *ngIf="!switch"> <ion-icon name="radio-button-off" large id="onoff"></ion-icon> </div>
+            </div>
+          </ion-card>
+          
+        </ion-col>
+        <ion-col col-9>
+          
+          <ion-grid no-padding item-content>
+            <ion-row>
+              <ion-col col-12 >
+                <ion-card>
+                  <ion-card-header>
+                    <div text-uppercase class="card-title">Temperature</div>
+                  </ion-card-header>
+                  <ion-grid no-padding item-content>
+                    <ion-row>
+                      <ion-col col-2>
+                        <h2>Current Temperature </h2>
+                        <div class="flex-col">
+                          <div class="clock-text">{{currentTemp}}°</div>
+                        </div>
+                      </ion-col>
+                      <ion-col col-10>
+                        <div id="graphTemp"></div>
+                        
+                      </ion-col>
+                      
+                      
+                    </ion-row>
+                  </ion-grid>   
+                  
+                </ion-card>
+              </ion-col>
+              <ion-col col-12 >
+                <ion-card>
+                  <ion-card-header>
+                    <div text-uppercase class="card-title"> Humidité</div>
+                  </ion-card-header>
+                  <ion-grid no-padding item-content>
+                    <ion-row>
+                      <ion-col col-2>
+                        <p>Humidité </p>
+                        <div class="flex-col">
+                          <div class="flex-align-item">
+                            <div class="clock-text">{{currentHum}}%</div>
+                          </div>
+                        </div>
+                      </ion-col>
+                      <ion-col col-10>
+                        <div id="graphHum"></div>
+                        
+                      </ion-col>
+                      
+                      
+                    </ion-row>
+                  </ion-grid>   
+                </ion-card>
+              </ion-col> 
+              
+            </ion-row>
+          </ion-grid>
+          
+        </ion-col> 
+      </ion-row>
+    </ion-grid>
+    <div id="gauge"></div>
+    
+    
+    <ion-grid no-padding item-content>
+      <ion-row>
+        <ion-col col-3 >
+          <div id="bar"></div>
+          
+        </ion-col> 
+        
+      </ion-row>
+    </ion-grid>
+    <div id="graph-chelou"></div>
+  </ion-content>
+  
+-->

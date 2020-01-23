@@ -9,17 +9,43 @@ import { HttpClientProvider } from '../../http-client/http-client';
 })
 export class HomePage {
   
-  graphTemp
+  // graphTemp
   graphHum
+  tool = false
+  // currentTemp
+  // currentHum
+  conf = {
+    dataScale:{
+      a:-.35,
+      b:189,
+      inv:false
+    },
+    refresh:500,
+    sampleSize:60000
+  }
+  // switch = true
+  humiditeValue
   
-  currentTemp
-  currentHum
+  gauge
+  bar
+  graphChelou
   
-  switch = true
-  
+  interval
+
+  tooling(){
+    this.tool = !this.tool
+    if(!this.tool){
+      clearInterval(this.interval)
+      this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
+    }
+  }
+
   constructor(public navCtrl: NavController, public http : HttpClientProvider) {
     this.refresh()
-    setInterval(()=>{this.refresh()},500)
+    //TODO stocker/charger la conf dans le serv
+    // mettre le setInterval dans le callback du ajax
+    this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
+    
   }
   
   refresh(){
@@ -27,36 +53,67 @@ export class HomePage {
     
     // this.createGraph()
     this.refreshGraphs()
+    
   }
   refreshGraphs(){
     console.log("data")
-    this.http.getData("temerature", 3600000 ).then(data=>{
-      this.currentTemp = data[0].data
-      let values = []
-      data.forEach(element =>{
-        values.push([element.date,element.data])
-      })
-      if(this.graphTemp !== undefined){
-        this.reloadSerie(values,'graphTemp','temperature')
+    // this.http.getData("temerature", 3600000 ).then(data=>{
+    //   if(data && data.length>0){
+    
+    
+    //     this.currentTemp = data[0].data
+    //     let values = []
+    //     data.forEach(element =>{
+    //       values.push([element.date,element.data])
+    //     })
+    //     if(this.graphTemp !== undefined){
+    //       this.reloadSerie(values,'graphTemp','temperature')
+    //     }else{
+    //       this.createGraph(values,'graphTemp','temperature')
+    //     }
+    //   }else{
+    //     console.log("no data temerature")
+    //   }
+    // })
+    this.http.getData("humidite", this.conf.sampleSize ).then(data=>{
+      if(data && data.length>0){
+        console.log(data[0].data)
+        this.humiditeValue = (((data[0].data*this.conf.dataScale.a)+this.conf.dataScale.b)*(this.conf.dataScale.inv?-1:1)).toFixed(0)
+        let values = []
+        data.forEach(element =>{
+          values.push([element.date,(((element.data*this.conf.dataScale.a)+this.conf.dataScale.b)*(this.conf.dataScale.inv?-1:1))])
+        })
+        if(this.graphHum !== undefined){
+          this.reloadSerie(values,'graphHum','humidite')
+        }else{
+          this.createGraph(values,'graphHum','humidite')
+        }
+        if(this.gauge !== undefined){
+          this.reloadGauge(this.humiditeValue)
+        }else{
+          this.putGauge(this.humiditeValue)
+        }
+        if(this.bar !== undefined){
+          this.reloadBar(this.humiditeValue)
+        }else{
+          this.putBar(this.humiditeValue)
+        }
       }else{
-        this.createGraph(values,'graphTemp','temperature')
+        console.log("no data humidite")
       }
     })
-    this.http.getData("humidite", 3600000 ).then(data=>{
-      this.currentHum = data[0].data
-      let values = []
-      data.forEach(element =>{
-        values.push([element.date,element.data])
-      })
-      if(this.graphHum !== undefined){
-        this.reloadSerie(values,'graphHum','humidite')
-      }else{
-        this.createGraph(values,'graphHum','humidite')
-      }
-    })
-    this.http.getLastData("switch" ).then(data=>{
-      this.switch = (data[0].data != 0) 
-    })
+    // this.http.getLastData("humidite").then(data=>{
+    //   if(data&& data.length>0){
+    //     this.humiditeValue = (data[0].data != 0) 
+    //     if(this.bar !== undefined){
+    //       this.reloadSerie(values,'graphHum','humidite')
+    //     }else{
+    //       this.putBar(values)
+    //     }
+    //   }else{
+    //     console.log("no data humidite")
+    //   }
+    // })
   }
   
   reloadSerie(value,id,name){
@@ -68,93 +125,376 @@ export class HomePage {
     while(document.querySelector("#"+id)==undefined){
       await this.promiseTimeout()
     }
+    
     var options = {
-      stroke: {
-        show: true,
-        curve: 'smooth',
-        lineCap: 'butt',
-        colors: undefined,
-        width: 2,
-        dashArray: 0,      
-      },
+      series: [{
+        name: "Humidité",
+        data: values
+      }],
       chart: {
+        toolbar: {
+          show:false
+        },
         animations:{
           enabled:false
         },
-        type: 'line',
-        stacked: false,
-        height: 200,
-        // zoom: {
-        //   type: 'x',
-        //   enabled: true,
-        //   autoScaleYaxis: true
-        // },
-        toolbar: {
-          autoSelected: 'zoom',
-          tools:{
-            pan:false
-          }
-        },
-        
+        height: 150,
+        type: 'area',
+        zoom: {
+          enabled: false
+        }
       },
       dataLabels: {
         enabled: false
       },
-      series: [{
-        name: name,
-        data: values
-      }
-    ],
-    markers: {
-      size: 5,
-    },
-    title: {
-      text: name,
-      align: 'left'
-    },
-    yaxis: {
-      //min: 0,
-      //max: 100,
-      labels: {
-        formatter: function (val) {
-          return val.toFixed(1);
-        },
+      stroke: {
+        curve: 'smooth',
+        width: 2.5,
       },
       title: {
-        text: name
+        text: '',
+        align: 'left'
       },
-    },
-    xaxis: {
-      type: 'datetime',
-    },
-    tooltip: {
-      shared: false,
-      y: {
-        formatter: function (val) {
-          return val.toFixed(1)
+      fill: {
+        // color:"#FF0000",
+        // type: 'gradient',
+      },
+      grid: {
+        row: {
+          colors: [ 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5
+        },
+        yaxis: {
+          lines: {
+            show: false
+          }
+        }, 
+        
+      },
+      yaxis: {
+        labels: {
+          formatter: function (val) {
+             if(val %50 == 0)
+            return val;
+          },
+        },
+        title: {
+          text: ''
+        },
+        min:0,
+        max:100,
+      },
+      xaxis: {
+        type: 'datetime',
+        axisBorder: {
+          show: false,
+        },
+      },
+      tooltip: {
+        shared: false,
+        y: {
+          formatter: function (val) {
+            return val
+          }
         }
       }
-    },
-    colors: [ "#0000ff","#00ff00", "#ff0000"],
+    };
+    //   var options = {
+    //     stroke: {
+    //       show: true,
+    //       curve: 'smooth',
+    //       lineCap: 'butt',
+    //       colors: undefined,
+    //       width: 2.5,
+    //       dashArray: 0,      
+    //     },
+    //     chart: {
+    //       animations:{
+    //         enabled:false
+    //       },
+    //       type: 'line',
+    //       stacked: false,
+    //       height: 200,
+    //       // zoom: {
+    //       //   type: 'x',
+    //       //   enabled: true,
+    //       //   autoScaleYaxis: true
+    //       // },
+    //       toolbar: {
+    //         autoSelected: 'zoom',
+    //         tools:{
+    //           pan:false
+    //         }
+    //       },
+    
+    //     },
+    //     dataLabels: {
+    //       enabled: false
+    //     },
+    //     series: [{
+    //       name: name,
+    //       data: values
+    //     }
+    //   ],
+    //   markers: {
+    //     size: 0,
+    //   },
+    //   title: {
+    //     text: name,
+    //     align: 'left'
+    //   },
+    //   yaxis: {
+    //     //min: 0,
+    //     //max: 100,
+    //     labels: {
+    //       formatter: function (val) {
+    //         return val.toFixed(1);
+    //       },
+    //     },
+    //     title: {
+    //       text: name
+    //     },
+    //   },
+    //   xaxis: {
+    //     type: 'datetime',
+    //   },
+    //   tooltip: {
+    //     shared: false,
+    //     y: {
+    //       formatter: function (val) {
+    //         return val.toFixed(1)
+    //       }
+    //     }
+    //   },
+    //   colors: [ "#0000ff","#00ff00", "#ff0000"],
+    // }
+    
+    //options.yaxis.min  = data["display_median"] - data["display_range"]
+    //options.yaxis.max = data["display_median"] + data["display_range"] 
+    // options.series[0].data = data["temperatures"]
+    
+    this[id] = new apexcharts(document.querySelector("#"+id), options);
+    this[id].render();
+    
+    
   }
   
-  //options.yaxis.min  = data["display_median"] - data["display_range"]
-  //options.yaxis.max = data["display_median"] + data["display_range"] 
-  // options.series[0].data = data["temperatures"]
+  promiseTimeout(){
+    return new Promise((resolve)=>{
+      setTimeout(()=>{
+        resolve()
+      },500)
+    })
+  }
+  async reloadBar(value){
+    this.bar.updateSeries([{name:"Inflation",data:[0,0,value,0,0]}])
+  }
+  async putBar(value){
+    while(document.querySelector("#bar")==undefined){
+      await this.promiseTimeout()
+    }
+    var options = {
+      
+      annotations: {
+        yaxis: [{
+          
+          // strokeDashArray:10,
+          y: 80,
+          y2:81,
+          borderColor: '#FF0000',
+          fillColor:'#FF0000',
+          opacity:1,
+          label: {
+            borderColor: '#FF0000',
+            style: {
+              opactity:0.5,
+              color: '#fff',
+              background: '#FF0000',
+            },
+            text: 'Seuil d\'alerte',
+          }
+        }]
+      },
+      ////////////////////////////////////
+      
+      series: [{
+        name: 'Inflation',
+        data: [0,0,value,0,0]
+      }],
+      chart: {
+        height: 300,
+        type: 'bar',
+      },
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          if(val != '0')
+          return val + "%";
+          return
+        },
+        offsetY: -20,
+        style: {
+          fontSize: '12px',
+          colors: ["#304758"]
+        }
+      },
+      
+      xaxis: {
+        categories: ["humidité"],
+        position: 'top',
+        labels: {
+          offsetY: -18,
+          
+        },
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        },
+        crosshairs: {
+          fill: {
+            type: 'gradient',
+            gradient: {
+              colorFrom: '#D8E3F0',
+              colorTo: '#BED1E6',
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5,
+            }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          offsetY: -35,
+          
+        }
+      },
+      fill: {
+        gradient: {
+          shade: 'light',
+          type: "horizontal",
+          shadeIntensity: 0.25,
+          gradientToColors: undefined,
+          inverseColors: true,
+          opacityFrom: 1,
+          opacityTo: 1,
+          stops: [50, 0, 100, 100]
+        },
+      },
+      yaxis: {
+        min:0,
+        max:100,
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function (val) {
+            return val + "%";
+          }
+        }
+        
+      },
+      title: {
+        text: 'Monthly Inflation in Argentina, 2002',
+        floating: true,
+        offsetY: 320,
+        align: 'center',
+        style: {
+          color: '#444'
+        }
+      }
+    };
+    
+    this.bar = new apexcharts(document.querySelector("#bar"), options);
+    this.bar.render();
+  }
   
-  this[id] = new apexcharts(document.querySelector("#"+id), options);
-  this[id].render();
+  async reloadGauge(value){
+    this.gauge.updateSeries([value])
+  }
   
+  async putGauge(value){
+    while(document.querySelector("#gauge")==undefined){
+      await this.promiseTimeout()
+    }
+    var options = {
+      series: [value],
+      chart: {
+        height: 200,
+        type: 'radialBar',
+        offsetY: -10,
+        animations:{
+          // enabled:false,
+          animateGradually: {
+            enabled: true,
+            delay: 0
+          },
+          dynamicAnimation: {
+            enabled: true,
+            speed: 0
+          }
+        },
+      },
+      plotOptions: {
+        radialBar: {
+          startAngle: -135,
+          endAngle: 135,
+          dataLabels: {
+            name: {
+              fontSize: '16px',
+              color: undefined,
+              offsetY: 120
+            },
+            value: {
+              offsetY: 76,
+              fontSize: '22px',
+              color: undefined,
+              formatter: function (val) {
+                return val + "%";
+              }
+            }
+          }
+        }
+      },
+      fill: {
+        type: 'gradient',
+        gradient: {
+          shade: 'dark',
+          shadeIntensity: 0.15,
+          inverseColors: false,
+          opacityFrom: 1,
+          opacityTo: 1,
+          stops: [0, 50, 65, 91]
+        },
+      },
+      stroke: {
+        dashArray: 4
+      },
+      labels: ['Median Ratio'],
+    };
+    
+    this.gauge = new apexcharts(document.querySelector("#gauge"), options);
+    this.gauge.render();
+  }
   
-}
-
-promiseTimeout(){
-  return new Promise((resolve)=>{
-    setTimeout(()=>{
-      resolve()
-    },500)
-  })
-}
-
-
+  putGraphChelou(){
+    
+  }
+  
+  // <div id="gauge"></div>
+  //   <div id="bar"></div>
+  //   <div id="graph-chelou"></div>
+  
 }

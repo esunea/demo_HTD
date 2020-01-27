@@ -9,6 +9,8 @@ import { HttpClientProvider } from '../../http-client/http-client';
 })
 export class HomePage {
   
+  barUS
+  baseHeight=200
   // graphTemp
   graphHum
   tool = false
@@ -20,11 +22,16 @@ export class HomePage {
       b:189,
       inv:false
     },
+    USscale:{
+      a:1,
+      b:0
+    },
     refresh:500,
-    sampleSize:60000
+    sampleSize:3600000
   }
   // switch = true
   humiditeValue
+  USValue
   
   gauge
   bar
@@ -102,6 +109,27 @@ export class HomePage {
         console.log("no data humidite")
       }
     })
+
+
+    this.http.getData("US", this.conf.sampleSize ).then(data=>{
+      if(data && data.length>0){
+        console.log(data[0].data)
+        this.USValue = (((data[0].data*this.conf.USscale.a)+this.conf.USscale.b)).toFixed(0)
+        let values = []
+        data.forEach(element =>{
+          values.push([element.date,(((element.data*this.conf.USscale.a)+this.conf.USscale.b))])
+        })
+      
+        if(this.barUS !== undefined){
+          this.reloadBarUS(this.USValue)
+        }else{
+          this.putBarUS(this.USValue)
+        }
+      }else{
+        console.log("no data humidite")
+      }
+    })
+
     // this.http.getLastData("humidite").then(data=>{
     //   if(data&& data.length>0){
     //     this.humiditeValue = (data[0].data != 0) 
@@ -138,7 +166,7 @@ export class HomePage {
         animations:{
           enabled:false
         },
-        height: 150,
+        height: this.baseHeight-38,
         type: 'area',
         zoom: {
           enabled: false
@@ -322,7 +350,7 @@ export class HomePage {
         data: [0,0,value,0,0]
       }],
       chart: {
-        height: 300,
+        height: this.baseHeight+29,
         type: 'bar',
       },
       plotOptions: {
@@ -432,7 +460,7 @@ export class HomePage {
     var options = {
       series: [value],
       chart: {
-        height: 200,
+        height: this.baseHeight-50,
         type: 'radialBar',
         offsetY: -10,
         animations:{
@@ -497,4 +525,144 @@ export class HomePage {
   //   <div id="bar"></div>
   //   <div id="graph-chelou"></div>
   
+
+  //*************************************** */
+
+  async reloadBarUS(value){
+    this.barUS.updateSeries([{name:"Inflation",data:[0,0,value,0,0]}])
+  }
+
+  async putBarUS(value){
+    while(document.querySelector("#barUS")==undefined){
+      await this.promiseTimeout()
+    }
+    var options = {
+      
+      annotations: {
+        yaxis: [{
+          
+          // strokeDashArray:10,
+          y: 80,
+          y2:81,
+          borderColor: '#FF0000',
+          fillColor:'#FF0000',
+          opacity:1,
+          label: {
+            borderColor: '#FF0000',
+            style: {
+              opactity:0.5,
+              color: '#fff',
+              background: '#FF0000',
+            },
+            text: 'Seuil d\'alerte',
+          }
+        }]
+      },
+      ////////////////////////////////////
+      
+      series: [{
+        name: 'Inflation',
+        data: [0,0,value,0,0]
+      }],
+      chart: {
+        height: this.baseHeight+29,
+        type: 'bar',
+      },
+      plotOptions: {
+        bar: {
+          dataLabels: {
+            position: 'top', // top, center, bottom
+          },
+        }
+      },
+      dataLabels: {
+        enabled: true,
+        formatter: function (val) {
+          if(val != '0')
+          return val + "%";
+          return
+        },
+        offsetY: -20,
+        style: {
+          fontSize: '12px',
+          colors: ["#304758"]
+        }
+      },
+      
+      xaxis: {
+        categories: ["humidité"],
+        position: 'top',
+        labels: {
+          offsetY: -18,
+          
+        },
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false
+        },
+        crosshairs: {
+          fill: {
+            type: 'gradient',
+            gradient: {
+              colorFrom: '#D8E3F0',
+              colorTo: '#BED1E6',
+              stops: [0, 100],
+              opacityFrom: 0.4,
+              opacityTo: 0.5,
+            }
+          }
+        },
+        tooltip: {
+          enabled: true,
+          offsetY: -35,
+          
+        }
+      },
+      fill: {
+        gradient: {
+          shade: 'light',
+          type: "horizontal",
+          shadeIntensity: 0.25,
+          gradientToColors: undefined,
+          inverseColors: true,
+          opacityFrom: 1,
+          opacityTo: 1,
+          stops: [50, 0, 100, 100]
+        },
+      },
+      yaxis: {
+        min:0,
+        max:100,
+        axisBorder: {
+          show: false
+        },
+        axisTicks: {
+          show: false,
+        },
+        labels: {
+          show: false,
+          formatter: function (val) {
+            return val + "%";
+          }
+        }
+        
+      },
+      title: {
+        text: 'Monthly Inflation in Argentina, 2002',
+        floating: true,
+        offsetY: 320,
+        align: 'center',
+        style: {
+          color: '#444'
+        }
+      }
+    };
+    
+    this.barUS = new apexcharts(document.querySelector("#barUS"), options);
+    this.barUS.render();
+  }
+
+
 }

@@ -33,40 +33,64 @@
 <ion-content padding>
   <ion-grid no-padding item-content>
     <ion-row>
-      <ion-col col-3 >
-        <ion-card>
-          <ion-card-header>
-            <div text-uppercase class="card-title">Jauge</div>
-          </ion-card-header>
-          
-          <div id="gauge"></div>
-          
-        </ion-card>
+      <ion-col  >
+        
+        
+        <ion-grid no-padding item-content>
+          <ion-row>
+            <ion-col col-3 >
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title">Jauge</div>
+                </ion-card-header>
+                
+                <div id="gauge"></div>
+                
+              </ion-card>
+              
+            </ion-col> 
+            <ion-col col-3>
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title">Barre</div>
+                </ion-card-header>
+                <div id="bar"></div>
+              </ion-card>
+              
+            </ion-col>
+            <ion-col col-6 >
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title">Historique</div>
+                </ion-card-header>
+                <div class="flex-col">
+                  <div id="Value" class="clock-text">{{humiditeValue}}%</div>
+                </div>
+                <div id="graphHum"></div>
+              </ion-card>
+              
+            </ion-col> 
+            
+            
+          </ion-row>
+        </ion-grid>
+        
+        <ion-grid>
+          <ion-row>
+            <ion-col  >
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title">Présence</div>
+                </ion-card-header>
+                <div id="barUS"></div>
+              </ion-card>
+            </ion-col> 
+          </ion-row>
+        </ion-grid>
+        
+        
         
       </ion-col> 
-      <ion-col col-3>
-        <ion-card>
-          <ion-card-header>
-            <div text-uppercase class="card-title">Bar</div>
-          </ion-card-header>
-        <div id="bar"></div>
-      </ion-card>
-
-      </ion-col>
-      <ion-col col-6 >
-        <ion-card>
-          <ion-card-header>
-            <div text-uppercase class="card-title">Historique</div>
-          </ion-card-header>
-        <div class="flex-col">
-          <div id="Value" class="clock-text">{{humiditeValue}}%</div>
-        </div>
-        <div id="graphHum"></div>
-      </ion-card>
-        
-      </ion-col> 
-      
-      
     </ion-row>
   </ion-grid>
   
@@ -81,10 +105,10 @@
     <input type="number" [(ngModel)]="conf.refresh">
     <p>temps couvert par l'historique (ms)</p>
     <input type="number" [(ngModel)]="conf.sampleSize">
-
+    
   </div>
   
-
+  
 </ion-content>
 
 <ion-footer>

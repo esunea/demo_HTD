@@ -60,10 +60,13 @@ export class HomePage {
     
     this.tool = !this.tool
     if(!this.tool){
-      this.http.config(this.conf).then(()=>{})
-      clearInterval(this.interval)
-      this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
-      document.location.reload(true)
+      console.log(this.conf)
+      this.http.config(this.conf).then(()=>{
+
+        clearInterval(this.interval)
+        this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
+        document.location.reload(true)
+      })
     }
   }
   

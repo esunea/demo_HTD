@@ -127,11 +127,7 @@ export class HomePage {
         }else{
           this.createGraph(values,'graphHum','humidite')
         }
-        if(this.gauge !== undefined){
-          this.reloadGauge(this.humiditeValue)
-        }else{
-          this.putGauge(this.humiditeValue)
-        }
+        
         if(this.bar !== undefined){
           this.reloadBar(this.humiditeValue)
         }else{
@@ -150,11 +146,17 @@ export class HomePage {
         data.forEach(element =>{
           values.push([element.date,(((element.data*this.conf.USscale.a)+this.conf.USscale.b))])
         })
-        
-        if(this.barUS !== undefined){
-          this.reloadBarUS(this.USValue)
+        console.log(values)
+
+        if(this.gauge !== undefined){
+          this.reloadGauge(this.USValue)
         }else{
-          this.putBarUS(this.USValue)
+          this.putGauge(this.USValue)
+        }
+        if(this.barUS !== undefined){
+          this.reloadBarUS(values)
+        }else{
+          this.putBarUS(values)
         }
       }else{
         console.log("no data humidite")
@@ -413,7 +415,7 @@ export class HomePage {
       },
       
       xaxis: {
-        categories: ["humidité"],
+        categories: ["Humidité"],
         position: 'top',
         labels: {
           offsetY: -18,
@@ -528,7 +530,7 @@ export class HomePage {
               fontSize: '22px',
               color: undefined,
               formatter: function (val) {
-                return val + "%";
+                return val + " cm";
               }
             }
           }
@@ -548,7 +550,7 @@ export class HomePage {
       stroke: {
         dashArray: 4
       },
-      labels: ['Median Ratio'],
+      labels: ['Distance'],
     };
     
     this.gauge = new apexcharts(document.querySelector("#gauge"), options);
@@ -567,7 +569,7 @@ export class HomePage {
   //*************************************** */
   
   async reloadBarUS(value){
-    this.barUS.updateSeries([{name:"Inflation",data:[0,0,value,0,0]}])
+    this.barUS.updateSeries([{name:"Distance",data:value}])
   }
   
   async putBarUS(value){
@@ -576,131 +578,78 @@ export class HomePage {
     }
     
     
-    let annotations = {}
-    if(this.conf.USAlert.active){
-      annotations=
-      {
-        yaxis: [{
-          
-          // strokeDashArray:10,
-          y: this.conf.USAlert.seuil,
-          y2:this.conf.USAlert.seuil+1,
-          borderColor: '#FF0000',
-          fillColor:'#FF0000',
-          opacity:1,
-          label: {
-            borderColor: '#FF0000',
-            style: {
-              opactity:0.5,
-              color: '#fff',
-              background: '#FF0000',
-            },
-            text: 'Seuil d\'alerte',
-          }
-        }]
-      }
-    }
+ 
+    
     var options = {
-      
-      annotations: annotations,
-      ////////////////////////////////////
-      
       series: [{
-        name: 'Inflation',
-        data: [0,0,value,0,0]
+        name: "Humidité",
+        data: value
       }],
       chart: {
-        height: this.baseHeight+29,
-        type: 'bar',
-      },
-      plotOptions: {
-        bar: {
-          dataLabels: {
-            position: 'top', // top, center, bottom
-          },
+        toolbar: {
+          show:false
+        },
+        animations:{
+          enabled:false
+        },
+        height: this.baseHeight-38,
+        type: 'area',
+        zoom: {
+          enabled: false
         }
       },
       dataLabels: {
-        enabled: true,
-        formatter: function (val) {
-          if(val != '0')
-          return val + "%";
-          return
-        },
-        offsetY: -20,
-        style: {
-          fontSize: '12px',
-          colors: ["#304758"]
-        }
+        enabled: false
       },
-      
-      xaxis: {
-        categories: ["humidité"],
-        position: 'top',
-        labels: {
-          offsetY: -18,
-          
-        },
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false
-        },
-        crosshairs: {
-          fill: {
-            type: 'gradient',
-            gradient: {
-              colorFrom: '#D8E3F0',
-              colorTo: '#BED1E6',
-              stops: [0, 100],
-              opacityFrom: 0.4,
-              opacityTo: 0.5,
-            }
-          }
-        },
-        tooltip: {
-          enabled: true,
-          offsetY: -35,
-          
-        }
-      },
-      fill: {
-        gradient: {
-          shade: 'light',
-          type: "horizontal",
-          shadeIntensity: 0.25,
-          gradientToColors: undefined,
-          inverseColors: true,
-          opacityFrom: 1,
-          opacityTo: 1,
-          stops: [50, 0, 100, 100]
-        },
-      },
-      yaxis: {
-        min:0,
-        max:100,
-        axisBorder: {
-          show: false
-        },
-        axisTicks: {
-          show: false,
-        },
-        labels: {
-          show: false,
-          formatter: function (val) {
-            return val + "%";
-          }
-        }
-        
+      stroke: {
+        curve: 'smooth',
+        width: 2.5,
       },
       title: {
-        text: 'Monthly Inflation in Argentina, 2002',
-        floating: true,
-        offsetY: 320,
-        align: 'center',
-        style: {
-          color: '#444'
+        text: '',
+        align: 'left'
+      },
+      fill: {
+        // color:"#FF0000",
+        // type: 'gradient',
+      },
+      grid: {
+        row: {
+          colors: [ 'transparent'], // takes an array which will be repeated on columns
+          opacity: 0.5
+        },
+        yaxis: {
+          lines: {
+            show: false
+          }
+        }, 
+        
+      },
+      yaxis: {
+        labels: {
+          formatter: function (val) {
+            if(val %50 == 0)
+            return val;
+          },
+        },
+        title: {
+          text: ''
+        },
+        min:0,
+        max:100,
+      },
+      xaxis: {
+        type: 'datetime',
+        axisBorder: {
+          show: false,
+        },
+      },
+      tooltip: {
+        shared: false,
+        y: {
+          formatter: function (val) {
+            return val
+          }
         }
       }
     };

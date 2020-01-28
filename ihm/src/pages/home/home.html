@@ -38,18 +38,8 @@
         
         <ion-grid no-padding item-content>
           <ion-row>
-            <ion-col col-3 >
-              <ion-card>
-                <ion-card-header>
-                  <div text-uppercase class="card-title">Jauge</div>
-                </ion-card-header>
-                
-                <div id="gauge"></div>
-                
-              </ion-card>
-              
-            </ion-col> 
-            <ion-col col-3>
+            
+            <ion-col col-6>
               <ion-card>
                 <ion-card-header>
                   <div text-uppercase class="card-title">Barre</div>
@@ -77,11 +67,25 @@
         
         <ion-grid>
           <ion-row>
-            <ion-col  >
+            <ion-col col-3 >
+              <ion-card>
+                <ion-card-header>
+                  <div text-uppercase class="card-title">Jauge</div>
+                </ion-card-header>
+                
+                <div id="gauge"></div>
+                
+              </ion-card>
+              
+            </ion-col> 
+            <ion-col  col-9>
               <ion-card>
                 <ion-card-header>
                   <div text-uppercase class="card-title">Présence</div>
                 </ion-card-header>
+                <div class="flex-col">
+                  <div id="Value" class="clock-text">{{USValue}} cm</div>
+                </div>
                 <div id="barUS"></div>
               </ion-card>
             </ion-col> 

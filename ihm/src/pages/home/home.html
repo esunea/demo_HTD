@@ -95,17 +95,33 @@
   </ion-grid>
   
   <div *ngIf="tool">
-    <p>a</p>
+    <p>Hum a</p>
     <input type="number" step=".01" [(ngModel)]="conf.dataScale.a">
-    <p>b</p>
+    <p>HUM b</p>
     <input type="number" [(ngModel)]="conf.dataScale.b">
-    <p>inv</p>
-    <input type="checkbox" [(ngModel)]="conf.dataScale.inv">
     <p>refresh timer (ms)</p>
     <input type="number" [(ngModel)]="conf.refresh">
     <p>temps couvert par l'historique (ms)</p>
     <input type="number" [(ngModel)]="conf.sampleSize">
-    
+    <p>US a</p>
+    <input type="number" step=".01" [(ngModel)]="conf.USscale.a">
+    <p>US b</p>
+    <input type="number" [(ngModel)]="conf.USscale.b">
+
+
+    <p>hum alert seuil</p>
+    <input type="number" [(ngModel)]="conf.humAlert.seuil">
+    <p>hum alert on ?</p>
+    <input type="checkbox" [(ngModel)]="conf.humAlert.active">
+
+    <p>US alert seuil</p>
+    <input type="number" [(ngModel)]="conf.USAlert.seuil">
+    <p>US alert on ?</p>
+    <input type="checkbox" [(ngModel)]="conf.USAlert.active">
+
+
+
+
   </div>
   
   

@@ -58,6 +58,22 @@ export class HttpClientProvider {
       })
     })
   }
+
+  config(body?){
+    return new Promise((resolve,reject)=>{    
+      if(!body){
+        let body = {}
+      }
+      this.http.post(this.baseURL+"config",body,{}).subscribe((data)=>{
+        // console.log(data)
+        if(data){
+          resolve(data)
+        }else{
+          reject()
+        }
+      })
+    })
+  }
   
   
 }

@@ -27,7 +27,15 @@ export class HomePage {
       b:0
     },
     refresh:500,
-    sampleSize:3600000
+    sampleSize:3600000,
+    humAlert:{
+      seuil:80,
+      active:true
+    },
+    USAlert:{
+      seuil:80,
+      active:true
+    },
   }
   // switch = true
   humiditeValue
@@ -38,16 +46,37 @@ export class HomePage {
   graphChelou
   
   interval
-
+  
   tooling(){
+    if(this.bar){
+      this.bar.destroy()
+      this.bar=undefined
+    }
+    if(this.barUS){
+      this.barUS.destroy()
+      this.barUS=undefined
+    }
+    
+    
     this.tool = !this.tool
     if(!this.tool){
+      this.http.config(this.conf).then(()=>{})
       clearInterval(this.interval)
       this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
+      document.location.reload(true)
     }
   }
-
+  
   constructor(public navCtrl: NavController, public http : HttpClientProvider) {
+    this.http.config({}).then((data:any)=>{
+      console.log(data)
+      if(data.length != 0){
+        this.conf = JSON.parse(data[0].value)
+      }
+    })
+    
+    
+    
     this.refresh()
     //TODO stocker/charger la conf dans le serv
     // mettre le setInterval dans le callback du ajax
@@ -63,7 +92,6 @@ export class HomePage {
     
   }
   refreshGraphs(){
-    console.log("data")
     // this.http.getData("temerature", 3600000 ).then(data=>{
     //   if(data && data.length>0){
     
@@ -83,8 +111,8 @@ export class HomePage {
     //   }
     // })
     this.http.getData("humidite", this.conf.sampleSize ).then(data=>{
+      console.log(data)
       if(data && data.length>0){
-        console.log(data[0].data)
         this.humiditeValue = (((data[0].data*this.conf.dataScale.a)+this.conf.dataScale.b)*(this.conf.dataScale.inv?-1:1)).toFixed(0)
         let values = []
         data.forEach(element =>{
@@ -109,17 +137,16 @@ export class HomePage {
         console.log("no data humidite")
       }
     })
-
-
+    
+    
     this.http.getData("US", this.conf.sampleSize ).then(data=>{
       if(data && data.length>0){
-        console.log(data[0].data)
         this.USValue = (((data[0].data*this.conf.USscale.a)+this.conf.USscale.b)).toFixed(0)
         let values = []
         data.forEach(element =>{
           values.push([element.date,(((element.data*this.conf.USscale.a)+this.conf.USscale.b))])
         })
-      
+        
         if(this.barUS !== undefined){
           this.reloadBarUS(this.USValue)
         }else{
@@ -129,7 +156,7 @@ export class HomePage {
         console.log("no data humidite")
       }
     })
-
+    
     // this.http.getLastData("humidite").then(data=>{
     //   if(data&& data.length>0){
     //     this.humiditeValue = (data[0].data != 0) 
@@ -202,7 +229,7 @@ export class HomePage {
       yaxis: {
         labels: {
           formatter: function (val) {
-             if(val %50 == 0)
+            if(val %50 == 0)
             return val;
           },
         },
@@ -321,14 +348,17 @@ export class HomePage {
     while(document.querySelector("#bar")==undefined){
       await this.promiseTimeout()
     }
-    var options = {
-      
-      annotations: {
+    
+    
+    let annotations = {}
+    if(this.conf.humAlert.active){
+      annotations=
+      {
         yaxis: [{
           
           // strokeDashArray:10,
-          y: 80,
-          y2:81,
+          y: this.conf.humAlert.seuil,
+          y2:this.conf.humAlert.seuil+1,
           borderColor: '#FF0000',
           fillColor:'#FF0000',
           opacity:1,
@@ -342,7 +372,11 @@ export class HomePage {
             text: 'Seuil d\'alerte',
           }
         }]
-      },
+      }
+    }
+    var options = {
+      
+      annotations: annotations,
       ////////////////////////////////////
       
       series: [{
@@ -525,25 +559,28 @@ export class HomePage {
   //   <div id="bar"></div>
   //   <div id="graph-chelou"></div>
   
-
+  
   //*************************************** */
-
+  
   async reloadBarUS(value){
     this.barUS.updateSeries([{name:"Inflation",data:[0,0,value,0,0]}])
   }
-
+  
   async putBarUS(value){
     while(document.querySelector("#barUS")==undefined){
       await this.promiseTimeout()
     }
-    var options = {
-      
-      annotations: {
+    
+    
+    let annotations = {}
+    if(this.conf.USAlert.active){
+      annotations=
+      {
         yaxis: [{
           
           // strokeDashArray:10,
-          y: 80,
-          y2:81,
+          y: this.conf.USAlert.seuil,
+          y2:this.conf.USAlert.seuil+1,
           borderColor: '#FF0000',
           fillColor:'#FF0000',
           opacity:1,
@@ -557,7 +594,11 @@ export class HomePage {
             text: 'Seuil d\'alerte',
           }
         }]
-      },
+      }
+    }
+    var options = {
+      
+      annotations: annotations,
       ////////////////////////////////////
       
       series: [{
@@ -663,6 +704,6 @@ export class HomePage {
     this.barUS = new apexcharts(document.querySelector("#barUS"), options);
     this.barUS.render();
   }
-
-
+  
+  
 }

@@ -68,6 +68,7 @@ export class HomePage {
   }
   
   constructor(public navCtrl: NavController, public http : HttpClientProvider) {
+    setTimeout(()=>{document.location.reload(true)},1800000)
     this.http.config({}).then((data:any)=>{
       console.log(data)
       if(data.length != 0){
@@ -111,7 +112,7 @@ export class HomePage {
     //   }
     // })
     this.http.getData("humidite", this.conf.sampleSize ).then(data=>{
-      console.log(data)
+      // console.log(data)
       if(data && data.length>0){
         this.humiditeValue = (((data[0].data*this.conf.dataScale.a)+this.conf.dataScale.b)*(this.conf.dataScale.inv?-1:1)).toFixed(0)
         let values = []

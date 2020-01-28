@@ -13,7 +13,7 @@
     
     <ion-title >
       <div class="flex-align-item">
-        <img src="assets/imgs/tekin_logo.png" alt="">
+        <img src="assets/imgs/tekin_logo.png" alt="" height="40px">
         <div class="margin-left-3"> Demo </div>
       </div>
     </ion-title>
@@ -39,19 +39,19 @@
         <ion-grid no-padding item-content>
           <ion-row>
             
-            <ion-col col-6>
+            <ion-col col-3>
               <ion-card>
                 <ion-card-header>
-                  <div text-uppercase class="card-title">Barre</div>
+                  <!-- <div text-uppercase class="card-title">Barre</div> -->
                 </ion-card-header>
                 <div id="bar"></div>
               </ion-card>
               
             </ion-col>
-            <ion-col col-6 >
+            <ion-col col-9 >
               <ion-card>
                 <ion-card-header>
-                  <div text-uppercase class="card-title">Historique</div>
+                  <!-- <div text-uppercase class="card-title">Historique</div> -->
                 </ion-card-header>
                 <div class="flex-col">
                   <div id="Value" class="clock-text">{{humiditeValue}}%</div>
@@ -65,12 +65,12 @@
           </ion-row>
         </ion-grid>
         
-        <ion-grid>
+        <ion-grid no-padding item-content>
           <ion-row>
             <ion-col col-3 >
               <ion-card>
                 <ion-card-header>
-                  <div text-uppercase class="card-title">Jauge</div>
+                  <!-- <div text-uppercase class="card-title">Jauge</div> -->
                 </ion-card-header>
                 
                 <div id="gauge"></div>
@@ -81,11 +81,8 @@
             <ion-col  col-9>
               <ion-card>
                 <ion-card-header>
-                  <div text-uppercase class="card-title">Présence</div>
+                  <!-- <div text-uppercase class="card-title">Présence</div> -->
                 </ion-card-header>
-                <div class="flex-col">
-                  <div id="Value" class="clock-text">{{USValue}} cm</div>
-                </div>
                 <div id="barUS"></div>
               </ion-card>
             </ion-col> 

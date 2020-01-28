@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController } from 'ionic-angular';
+import { NavController, AlertController } from 'ionic-angular';
 import apexcharts from 'apexcharts';
 import { HttpClientProvider } from '../../http-client/http-client';
 
@@ -9,7 +9,11 @@ import { HttpClientProvider } from '../../http-client/http-client';
 })
 export class HomePage {
   
+  color = "#f39303"
+
   barUS
+  alertCD = true
+  alertFM = true
   baseHeight=200
   // graphTemp
   graphHum
@@ -62,7 +66,7 @@ export class HomePage {
     if(!this.tool){
       console.log(this.conf)
       this.http.config(this.conf).then(()=>{
-
+        
         clearInterval(this.interval)
         this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
         document.location.reload(true)
@@ -70,8 +74,10 @@ export class HomePage {
     }
   }
   
-  constructor(public navCtrl: NavController, public http : HttpClientProvider) {
+  constructor(public navCtrl: NavController, public http : HttpClientProvider, public alertController: AlertController) {
+    console.log(navigator.userAgent)
     setTimeout(()=>{document.location.reload(true)},1800000)
+    // setTimeout(()=>{this.alert()})
     this.http.config({}).then((data:any)=>{
       console.log(data)
       if(data.length != 0){
@@ -94,6 +100,18 @@ export class HomePage {
     // this.createGraph()
     this.refreshGraphs()
     
+  }
+  
+  async alert(){
+    navigator.vibrate(1000); 
+    const alert = await this.alertController.create({
+      // header: 'Alert',
+      // subHeader: 'Subtitle',
+      
+      message: "Humidité trop Élevée",
+      buttons: ['OK']
+    });
+    await alert.present();
   }
   refreshGraphs(){
     // this.http.getData("temerature", 3600000 ).then(data=>{
@@ -119,6 +137,19 @@ export class HomePage {
       if(data && data.length>0){
         this.humiditeValue = (((data[0].data*this.conf.dataScale.a)+this.conf.dataScale.b)*(this.conf.dataScale.inv?-1:1)).toFixed(0)
         let values = []
+        if(this.humiditeValue > this.conf.humAlert.seuil){
+          if(this.alertCD && this.alertFM){
+            this.alert()
+            this.alertCD = false
+            this.alertFM = false
+            setTimeout(()=>{
+              this.alertCD = true
+            }, 2500
+            )
+          }
+        }else{
+          this.alertFM = true
+        }
         data.forEach(element =>{
           values.push([element.date,(((element.data*this.conf.dataScale.a)+this.conf.dataScale.b)*(this.conf.dataScale.inv?-1:1))])
         })
@@ -147,7 +178,7 @@ export class HomePage {
           values.push([element.date,(((element.data*this.conf.USscale.a)+this.conf.USscale.b))])
         })
         console.log(values)
-
+        
         if(this.gauge !== undefined){
           this.reloadGauge(this.USValue)
         }else{
@@ -189,7 +220,7 @@ export class HomePage {
     
     var options = {
       series: [{
-        name: "Humidité",
+        name: "",
         data: values
       }],
       chart: {
@@ -348,7 +379,7 @@ export class HomePage {
     })
   }
   async reloadBar(value){
-    this.bar.updateSeries([{name:"Inflation",data:[0,0,value,0,0]}])
+    this.bar.updateSeries([{name:"Inflation",data:[value]}])
   }
   async putBar(value){
     while(document.querySelector("#bar")==undefined){
@@ -387,7 +418,7 @@ export class HomePage {
       
       series: [{
         name: 'Inflation',
-        data: [0,0,value,0,0]
+        data: [value]
       }],
       chart: {
         height: this.baseHeight+29,
@@ -415,7 +446,7 @@ export class HomePage {
       },
       
       xaxis: {
-        categories: ["Humidité"],
+        categories: [""],
         position: 'top',
         labels: {
           offsetY: -18,
@@ -500,9 +531,9 @@ export class HomePage {
     var options = {
       series: [value],
       chart: {
-        height: this.baseHeight-50,
+        height: this.baseHeight,
         type: 'radialBar',
-        offsetY: -10,
+        offsetY: 10,
         animations:{
           // enabled:false,
           animateGradually: {
@@ -526,9 +557,9 @@ export class HomePage {
               offsetY: 120
             },
             value: {
-              offsetY: 76,
-              fontSize: '22px',
-              color: undefined,
+              offsetY: 100,
+              fontSize: '4em',
+              color: '#707070',
               formatter: function (val) {
                 return val + " cm";
               }
@@ -550,7 +581,7 @@ export class HomePage {
       stroke: {
         dashArray: 4
       },
-      labels: ['Distance'],
+      labels: [''],
     };
     
     this.gauge = new apexcharts(document.querySelector("#gauge"), options);
@@ -578,11 +609,11 @@ export class HomePage {
     }
     
     
- 
+    
     
     var options = {
       series: [{
-        name: "Humidité",
+        name: "",
         data: value
       }],
       chart: {
@@ -592,7 +623,7 @@ export class HomePage {
         animations:{
           enabled:false
         },
-        height: this.baseHeight-38,
+        height: this.baseHeight+73,
         type: 'area',
         zoom: {
           enabled: false
@@ -636,7 +667,7 @@ export class HomePage {
           text: ''
         },
         min:0,
-        max:100,
+        max:400,
       },
       xaxis: {
         type: 'datetime',

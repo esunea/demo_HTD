@@ -10,7 +10,7 @@ export class FakeData {
     generated_sens = 1
     generated_value = 400
     generated_max = 520
-    generated_min = 250
+    generated_min = 260
     constructor(){
 
     }

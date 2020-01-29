@@ -9,8 +9,10 @@ import { HttpClientProvider } from '../../http-client/http-client';
 })
 export class HomePage {
   
+  showAlerte= false;
+  
   color = "#f39303"
-
+  alertOffTimeout
   barUS
   alertCD = true
   alertFM = true
@@ -107,18 +109,31 @@ export class HomePage {
     // const alert = await this.alertController.create({
     //   // header: 'Alert',
     //   // subHeader: 'Subtitle',
-      
+    
     //   message: "Humidité trop Élevée",
     //   buttons: ['OK']
     // });
     // await alert.present();
-    const toast = this.toastCtrl.create({
-      message: 'L\'humidité est trop élevée',
-      duration: 2000
-    });
-    toast.present();
-
+    // const toast = this.toastCtrl.create({
+    //   message: 'L\'humidité est trop élevée',
+    //   duration: 2000
+    // });
+    // toast.present();
+    this.showAlerte = true;
+    if(this.alertOffTimeout){
+      clearTimeout(this.alertOffTimeout)
+    }
+    this.alertOffTimeout = setTimeout(() => {
+      this.showAlerte = false;
+    }, 2000);
   }
+
+  resetAlert(){
+    clearTimeout(this.alertOffTimeout)
+    this.showAlerte = false
+  }
+
+
   refreshGraphs(){
     // this.http.getData("temerature", 3600000 ).then(data=>{
     //   if(data && data.length>0){

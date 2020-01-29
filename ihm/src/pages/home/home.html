@@ -94,6 +94,17 @@
       </ion-col> 
     </ion-row>
   </ion-grid>
+  <ion-fab bottom right  *ngIf="showAlerte" (click)="resetAlert()">
+    <!-- <button ion-fab mini><ion-icon name="add"></ion-icon></button> -->
+    
+    <ion-card>
+    <ion-card-header id="danger">
+      <div id="danger-title">Alerte</div>
+    </ion-card-header>
+      <div id="danger-txt">Trop d'humidité détectée</div>
+    </ion-card>
+
+  </ion-fab>
   
   <div *ngIf="tool">
     <p>Hum a</p>

@@ -1,12 +1,13 @@
 import { Get, HttpResponseOK, Post, Options, dependency } from '@foal/core';
 import { getConnection, getRepository } from 'typeorm';
 import { Data, Config } from '../entities';
-import { SocketHandler } from '../services';
+import { SocketHandler, FakeData } from '../services';
 import { get } from 'http';
 
 export class ApiController {
   @dependency
-  socket : SocketHandler
+  // socket : SocketHandler
+  fakeData : FakeData
   constructor(){
     // this.socket = new SocketHandler()
   }
@@ -61,15 +62,22 @@ export class ApiController {
     let count = payload.length
     for (let index = 0; index < payload.length; index++) {
       const element = payload[index];
-      let data = new Data()
-      data.deviceName = element.name
-      data.data = element.data
-      data.date = new Date()
-      console.log(data)
-      let result = await getRepository(Data).save(data);
-      if(result){
-        count --
-      }
+      if(element.name =="humidite" ){
+        await this.fakeData.processData(element)
+        
+      }//else{
+        
+        let data = new Data()
+        data.deviceName = element.name
+        data.data = element.data
+        data.date = new Date()
+        console.log(data)
+        let result = await getRepository(Data).save(data);
+        if(result){
+          count --
+        }
+      // }
+
     }
     
     let resp = new HttpResponseOK()
@@ -80,7 +88,7 @@ export class ApiController {
   @Post("/vibrate")
   vibrate(ctx){
     console.log(ctx.request.body.msg)
-    this.socket.sendMessage(ctx.request.body.msg)
+    // this.socket.sendMessage(ctx.request.body.msg)
     return new HttpResponseOK("ok")
   }
   

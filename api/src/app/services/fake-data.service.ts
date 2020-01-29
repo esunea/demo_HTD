@@ -33,10 +33,10 @@ export class FakeData {
         }else{
             if(this.fakeData){
                 // on envoie les fakedata
-                console.log("fake")
+                // console.log("fake")
                 await this.register_data(this.generateData())
             }else{
-                console.log("true")
+                // console.log("true")
                 // on envoie les vraies datas
                 await this.register_data(data)
             }
@@ -55,7 +55,7 @@ export class FakeData {
         data.deviceName = element.name
         data.data = element.data
         data.date = new Date()
-        console.log(data)
+        // console.log(data)
         let result = await getRepository(Data).save(data);
     }
 

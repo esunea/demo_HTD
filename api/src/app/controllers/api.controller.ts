@@ -58,7 +58,7 @@ export class ApiController {
   @Post('/send')
   async send(ctx){
     let payload = ctx.request.body.payload
-    console.log(payload)
+    // console.log(payload)
     let count = payload.length
     for (let index = 0; index < payload.length; index++) {
       const element = payload[index];
@@ -71,7 +71,7 @@ export class ApiController {
         data.deviceName = element.name
         data.data = element.data
         data.date = new Date()
-        console.log(data)
+        // console.log(data)
         let result = await getRepository(Data).save(data);
         if(result){
           count --

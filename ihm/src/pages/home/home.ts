@@ -33,7 +33,7 @@ export class HomePage {
       b:0
     },
     refresh:500,
-    sampleSize:3600000,
+    sampleSize:1000,
     humAlert:{
       seuil:80,
       active:true
@@ -85,14 +85,15 @@ export class HomePage {
       if(data.length != 0){
         this.conf = JSON.parse(data[0].value)
       }
+      this.refresh()
+      //TODO stocker/charger la conf dans le serv
+      // mettre le setInterval dans le callback du ajax
+      this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
     })
     
     
     
-    this.refresh()
-    //TODO stocker/charger la conf dans le serv
-    // mettre le setInterval dans le callback du ajax
-    this.interval = setInterval(()=>{this.refresh()},this.conf.refresh)
+    
     
   }
   
@@ -125,15 +126,15 @@ export class HomePage {
     }
     this.alertOffTimeout = setTimeout(() => {
       this.showAlerte = false;
-    }, 2000);
+    }, 4000);
   }
-
+  
   resetAlert(){
     clearTimeout(this.alertOffTimeout)
     this.showAlerte = false
   }
-
-
+  
+  
   refreshGraphs(){
     // this.http.getData("temerature", 3600000 ).then(data=>{
     //   if(data && data.length>0){
@@ -165,7 +166,7 @@ export class HomePage {
             this.alertFM = false
             setTimeout(()=>{
               this.alertCD = true
-            }, 2500
+            }, 5000
             )
           }
         }else{
@@ -238,8 +239,33 @@ export class HomePage {
     while(document.querySelector("#"+id)==undefined){
       await this.promiseTimeout()
     }
-    
+    let annotations = {}
+    if(this.conf.humAlert.active){
+      annotations=
+      {
+        yaxis: [{
+          
+          // strokeDashArray:10,
+          y: this.conf.humAlert.seuil,
+          y2:this.conf.humAlert.seuil+1,
+          borderColor: '#285180',
+          fillColor:'#285180',
+          opacity:1,
+          label: {
+            show:false,
+            borderColor: '##285180',
+            style: {
+              color: '#fff',
+              background: '#285180',
+            },
+            text: ' ',
+          }
+        }]
+      }
+    }
     var options = {
+      
+      annotations: annotations,
       series: [{
         name: "",
         data: values
@@ -273,7 +299,7 @@ export class HomePage {
         // type: 'gradient',
       },
       colors:[this.orangeTekin],
-
+      
       grid: {
         row: {
           colors: [ 'transparent'], // takes an array which will be repeated on columns
@@ -591,7 +617,7 @@ export class HomePage {
         }
       },
       colors:[this.orangeTekin],
-
+      
       fill: {
         type: 'gradient',
         gradient: {
@@ -701,7 +727,7 @@ export class HomePage {
         },
       },
       colors:[this.orangeTekin],
-
+      
       tooltip: {
         shared: false,
         y: {

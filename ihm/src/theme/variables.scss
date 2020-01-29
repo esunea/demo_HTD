@@ -40,9 +40,10 @@ danger:     #f53d3d,
 light:      #f4f4f4,
 dark:       #222,
 orange-tekin: #f6881905,
-header: #3e3f3a,
+header: #FFFFFF,
 bleu-header: #285180,
 );
+//3e3f3a
 ion-card-header{
   background-color:map-get($colors, bleu-header) ;
 }
@@ -57,13 +58,13 @@ div.toolbar-background-md{
 font-size: 6em;
 }
 #refresh{
-  color:white;
+  color:#3e3f3a;
 }
 #stfu{
-  color:white;
+  color:#3e3f3a;
 }
 div.toolbar-title-md{
-  color:white;
+  color:#3e3f3a;
 }
 div.scroll-content{
   background-color: map-get($colors, orange-tekin);

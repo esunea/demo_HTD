@@ -9,8 +9,8 @@ export class FakeData {
     
     generated_sens = 1
     generated_value = 400
-    generated_max = 520
-    generated_min = 260
+    generated_max = 480
+    generated_min = 300
     constructor(){
 
     }
@@ -73,7 +73,7 @@ export class FakeData {
 
         return {
             name:"humidite",
-            data:val
+            data:val+((Math.random()*80) -40)
         }
     }
 }

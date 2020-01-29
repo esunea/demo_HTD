@@ -11,7 +11,7 @@ export class HomePage {
   
   showAlerte= false;
   
-  color = "#f39303"
+  orangeTekin = "#f39303"
   alertOffTimeout
   barUS
   alertCD = true
@@ -272,6 +272,8 @@ export class HomePage {
         // color:"#FF0000",
         // type: 'gradient',
       },
+      colors:[this.orangeTekin],
+
       grid: {
         row: {
           colors: [ 'transparent'], // takes an array which will be repeated on columns
@@ -417,15 +419,14 @@ export class HomePage {
           // strokeDashArray:10,
           y: this.conf.humAlert.seuil,
           y2:this.conf.humAlert.seuil+1,
-          borderColor: '#FF0000',
-          fillColor:'#FF0000',
+          borderColor: '#285180',
+          fillColor:'#285180',
           opacity:1,
           label: {
-            borderColor: '#FF0000',
+            borderColor: '##285180',
             style: {
-              opactity:0.5,
               color: '#fff',
-              background: '#FF0000',
+              background: '#285180',
             },
             text: 'Seuil d\'alerte',
           }
@@ -526,6 +527,7 @@ export class HomePage {
         }
         
       },
+      colors:[this.orangeTekin],
       title: {
         text: 'Monthly Inflation in Argentina, 2002',
         floating: true,
@@ -588,6 +590,8 @@ export class HomePage {
           }
         }
       },
+      colors:[this.orangeTekin],
+
       fill: {
         type: 'gradient',
         gradient: {
@@ -696,6 +700,8 @@ export class HomePage {
           show: false,
         },
       },
+      colors:[this.orangeTekin],
+
       tooltip: {
         shared: false,
         y: {

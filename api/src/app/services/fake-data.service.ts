@@ -9,7 +9,7 @@ export class FakeData {
     
     generated_sens = 1
     generated_value = 400
-    generated_max = 540
+    generated_max = 520
     generated_min = 230
     constructor(){
 
@@ -60,7 +60,7 @@ export class FakeData {
     }
 
     generateData(){
-        let val = this.generated_value + 50*this.generated_sens
+        let val = this.generated_value + 25*this.generated_sens
         if(val > this.generated_max){
             val = this.generated_max
             this.generated_sens *= -1

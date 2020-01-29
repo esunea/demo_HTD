@@ -1,5 +1,5 @@
 import { Component } from '@angular/core';
-import { NavController, AlertController } from 'ionic-angular';
+import { NavController, AlertController, ToastController } from 'ionic-angular';
 import apexcharts from 'apexcharts';
 import { HttpClientProvider } from '../../http-client/http-client';
 
@@ -74,7 +74,7 @@ export class HomePage {
     }
   }
   
-  constructor(public navCtrl: NavController, public http : HttpClientProvider, public alertController: AlertController) {
+  constructor(public navCtrl: NavController, public http : HttpClientProvider, public alertController: AlertController, public toastCtrl: ToastController) {
     console.log(navigator.userAgent)
     setTimeout(()=>{document.location.reload(true)},1800000)
     // setTimeout(()=>{this.alert()})
@@ -104,14 +104,20 @@ export class HomePage {
   
   async alert(){
     navigator.vibrate(1000); 
-    const alert = await this.alertController.create({
-      // header: 'Alert',
-      // subHeader: 'Subtitle',
+    // const alert = await this.alertController.create({
+    //   // header: 'Alert',
+    //   // subHeader: 'Subtitle',
       
-      message: "Humidité trop Élevée",
-      buttons: ['OK']
+    //   message: "Humidité trop Élevée",
+    //   buttons: ['OK']
+    // });
+    // await alert.present();
+    const toast = this.toastCtrl.create({
+      message: 'L\'humidité est trop élevée',
+      duration: 2000
     });
-    await alert.present();
+    toast.present();
+
   }
   refreshGraphs(){
     // this.http.getData("temerature", 3600000 ).then(data=>{

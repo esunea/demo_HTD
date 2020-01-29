@@ -65,7 +65,7 @@ export class ApiController {
       if(element.name =="humidite" ){
         await this.fakeData.processData(element)
         
-      }//else{
+      }else{
         
         let data = new Data()
         data.deviceName = element.name
@@ -76,7 +76,7 @@ export class ApiController {
         if(result){
           count --
         }
-      // }
+      }
 
     }
     

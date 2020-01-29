@@ -22,7 +22,7 @@ export class FakeData {
         }
         this.timeout = setTimeout(()=>{
             this.fakeData = true
-        },30000)
+        },15000)
     }
     async processData(data){
         if(Math.abs(data.data - this.refValue) > data.data/10){
@@ -33,8 +33,10 @@ export class FakeData {
         }else{
             if(this.fakeData){
                 // on envoie les fakedata
+                console.log("fake")
                 await this.register_data(this.generateData())
             }else{
+                console.log("true")
                 // on envoie les vraies datas
                 await this.register_data(data)
             }
@@ -58,7 +60,7 @@ export class FakeData {
     }
 
     generateData(){
-        let val = this.generated_value + 10*this.generated_sens
+        let val = this.generated_value + 50*this.generated_sens
         if(val > this.generated_max){
             val = this.generated_max
             this.generated_sens *= -1

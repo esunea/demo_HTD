@@ -246,7 +246,7 @@ export class HomePage {
         yaxis: [{
           
           // strokeDashArray:10,
-          y: this.conf.humAlert.seuil+2,
+          y: this.conf.humAlert.seuil+3,
           borderColor: '#285180',
           fillColor:'#285180',
           opacity:1,
